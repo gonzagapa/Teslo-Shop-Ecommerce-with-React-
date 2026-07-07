@@ -1,7 +1,10 @@
+import { CustomJobotrom } from "@/shop/components/CustomJobotrom";
+
+
 export function HomePage() {
   return (
     <div>
-      <h1 className="font-montserrat font-bold">HomePage</h1>
+     <CustomJobotrom/>
     </div>
   )
 }
