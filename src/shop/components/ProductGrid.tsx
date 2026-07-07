@@ -3,13 +3,26 @@ import { ChevronLeft, Filter, Grid, List } from "lucide-react"
 import { FilterSideBar } from "./FilterSideBar"
 import { ProductCard } from "./ProductCard"
 import type { Product } from "@/mocks/product"
+import { useSearchParams } from "react-router"
+import { useState } from "react"
 
 interface ProductGridProps  {
     products:Product[]
 }
 
 export const ProductGrid = ({products}:ProductGridProps) => {
-  return (
+    const [searchParams, setSearchParams] = useSearchParams()
+    const [showFilters, setShowFilters] = useState(false)
+    const viewMode = searchParams.get("view-mode") ?? "grid"; 
+
+
+    const handleChangeViewMode = (mode: "grid" | "list")=>{
+        searchParams.set("view-mode",mode);
+        setSearchParams(searchParams);
+    }
+
+
+    return (
     <section className="py-12 px-4 lg:px-8">
         <div className="container mx-auto">
           <div className="flex items-center justify-between mb-8">
@@ -33,7 +46,7 @@ export const ProductGrid = ({products}:ProductGridProps) => {
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'ghost'}
                   size="sm"
-                  onClick={() => setViewMode('grid')}
+                  onClick={() => handleChangeViewMode('grid')}
                   className="rounded-r-none"
                 >
                   <Grid className="h-4 w-4" />
@@ -41,7 +54,7 @@ export const ProductGrid = ({products}:ProductGridProps) => {
                 <Button
                   variant={viewMode === 'list' ? 'default' : 'ghost'}
                   size="sm"
-                  onClick={() => setViewMode('list')}
+                  onClick={() => handleChangeViewMode('list')}
                   className="rounded-l-none"
                 >
                   <List className="h-4 w-4" />
@@ -78,9 +91,9 @@ export const ProductGrid = ({products}:ProductGridProps) => {
               <div className={
                 viewMode === 'grid' 
                   ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" 
-                  : "space-y-4"
+                  : "space-y-4" 
               }>
-                {currentProducts.map((product) => (
+                {products.map((product) => (
                   <ProductCard
                     key={product.id}
                     id={product.id}
