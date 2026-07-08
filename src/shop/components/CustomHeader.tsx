@@ -1,3 +1,4 @@
+import { CustumLogo } from "@/components/custom/CustumLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu, Search, ShoppingBag } from "lucide-react";
@@ -15,10 +16,10 @@ export  function CustomHeader() {
     const handleInputChange = (event:React.KeyboardEvent<HTMLInputElement>)=>{
       if(event.key !== "Enter") return; 
 
-      const inputValue = inputRef.current.value
+      const inputValue = inputRef.current?.value
       const newSearchParams = new URLSearchParams();
 
-      if(inputValue.trim().length == 0 ) {
+      if( typeof inputValue == "undefined" || inputValue.trim().length == 0 ) {
         newSearchParams.delete('search')
       }else{
 
@@ -39,7 +40,7 @@ export  function CustomHeader() {
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />
             </Button>
-            <h1 className="text-xl font-semibold tracking-tight">TESLA STYLE</h1>
+            <CustumLogo/>
           </div>
 
           {/* Navigation - Desktop */}
