@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, Filter, Grid, List } from "lucide-react"
+import { Filter, Grid, List } from "lucide-react"
 import { FilterSideBar } from "./FilterSideBar"
 import { ProductCard } from "./ProductCard"
 import type { Product } from "@/mocks/product"

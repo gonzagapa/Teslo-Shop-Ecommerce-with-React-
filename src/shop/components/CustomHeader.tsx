@@ -1,12 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu, Search, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { NavLink, useSearchParams } from "react-router";
 
 
 export  function CustomHeader() {
 
+    const [searchParams,setSearchParams] = useSearchParams()
+    const inputSearchValue = searchParams.get("search") ?? ""
     const [cartCount,] = useState(3);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const handleInputChange = (event:React.KeyboardEvent<HTMLInputElement>)=>{
+      if(event.key !== "Enter") return; 
+
+      const inputValue = inputRef.current.value
+      const newSearchParams = new URLSearchParams();
+
+      if(inputValue.trim().length == 0 ) {
+        newSearchParams.delete('search')
+      }else{
+
+        newSearchParams.set('search',inputValue); 
+      }
+
+      setSearchParams(newSearchParams);
+
+    }
+
+    
     
   return <header className="sticky top-0 z-50 w-full border-b backdrop-blur bg-slate-50">
       <div className="container mx-auto px-4 lg:px-8">
@@ -21,18 +44,18 @@ export  function CustomHeader() {
 
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-sm font-medium transition-colors hover:text-primary">
-              Camisetas
-            </a>
-            <a href="#" className="text-sm font-medium transition-colors hover:text-primary">
-              Sudaderas
-            </a>
-            <a href="#" className="text-sm font-medium transition-colors hover:text-primary">
-              Chaquetas
-            </a>
-            <a href="#" className="text-sm font-medium transition-colors hover:text-primary">
-              Accesorios
-            </a>
+            <NavLink to="/" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
+              Todos
+            </NavLink>
+            <NavLink to="/gender/hombre" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
+              Hombre
+            </NavLink>
+            <NavLink to="/gender/mujer" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
+              Mujer
+            </NavLink>
+            <NavLink to="/gender/ninos" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
+              Niños
+            </NavLink>
           </nav>
 
           {/* Search and Cart */}
@@ -40,7 +63,10 @@ export  function CustomHeader() {
             <div className="hidden md:flex items-center space-x-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input placeholder="Buscar productos..." className="pl-9 w-64 h-9" />
+                <Input ref={inputRef} 
+                defaultValue={inputSearchValue}
+                onKeyDown={handleInputChange}
+                placeholder="Buscar productos..." className="pl-9 w-64 h-9 bg-white" />
               </div>
             </div>
             
