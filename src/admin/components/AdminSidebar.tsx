@@ -12,7 +12,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { CustumLogo } from '@/components/custom/CustumLogo';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -20,9 +20,12 @@ interface SidebarProps {
 }
 
 const AdminSidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
+
+  const {pathname} = useLocation();
+
   const menuItems = [
-    { icon: Home, label: 'Dashboard', active: true },
-    { icon: BarChart3, label: 'Analytics' },
+    { icon: Home, label: 'Dashboard', to:"/admin"},
+    { icon: BarChart3, label: 'Productos', to:"/admin/products" },
     { icon: Users, label: 'Users' },
     { icon: ShoppingCart, label: 'Orders' },
     { icon: FileText, label: 'Reports' },
@@ -30,6 +33,10 @@ const AdminSidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
     { icon: Settings, label: 'Settings' },
     { icon: HelpCircle, label: 'Help' },
   ];
+
+  const isActive = (to:string)=>{
+    return pathname === to;
+  }
 
   return (
     <div className={`bg-white border-r border-gray-200 transition-all duration-300 ease-in-out ${
@@ -56,9 +63,9 @@ const AdminSidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
             return (
               <li key={index}>
                 <Link
-                  to="#"
+                  to={item.to ?? "/admin"}
                   className={`flex items-center space-x-3 px-2 min-w-10 py-2 rounded-lg transition-all duration-200 group ${
-                    item.active
+                    isActive(item.to ?? "/xxxx")
                       ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`}
