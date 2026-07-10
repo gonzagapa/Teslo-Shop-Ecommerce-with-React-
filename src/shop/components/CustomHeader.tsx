@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu, Search, ShoppingBag } from "lucide-react";
 import { useRef, useState } from "react";
-import { NavLink, useSearchParams } from "react-router";
+import { Link, NavLink, useSearchParams } from "react-router";
 
 
 export  function CustomHeader() {
@@ -81,6 +81,21 @@ export  function CustomHeader() {
                   {cartCount}
                 </span>}
             </Button>
+
+            <div className="ml-5 flex gap-2">
+              <Link to={'/auth/login'} >
+                <Button>
+                  Login
+                </Button>
+              </Link>
+
+              <Link to={'/admin'}>
+                <Button variant='destructive'>
+                  admin
+                </Button>
+              </Link>
+            </div>
+
           </div>
         </div>
       </div>
