@@ -4,7 +4,11 @@ import type { ProductResponse } from "@/types/products.response";
 interface Options {
     limit?: string | number, 
     offset?: string | number,
-    sizes?:string
+    sizes?:string,
+    gender?:string,
+    minPrice?: number | string, 
+    maxPrice?: number,
+    q?:string
 }
 type OptionsKey = keyof Options;  
 
@@ -19,8 +23,7 @@ export const getProductsAction = async(option:Options):Promise<ProductResponse>=
 
         queryparams[key] = option[key as OptionsKey] 
     }
-    console.log(queryparams);
-
+    
     const {data} = await apiTeslo.get<ProductResponse>(`/products?${new URLSearchParams({...queryparams}).toString()}`);
 
     const productWithImages = data.products.map(product => ({

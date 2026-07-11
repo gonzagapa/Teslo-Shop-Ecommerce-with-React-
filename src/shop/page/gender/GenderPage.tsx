@@ -8,7 +8,7 @@ import { useParams } from "react-router";
 
 export function GenderPage() {
   const { gender } = useParams();
-  const {data} = useProducts();
+  const {data} = useProducts(gender);
   // TODO: Cargar productos por género
 
   return (

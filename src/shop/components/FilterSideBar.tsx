@@ -12,9 +12,14 @@ export const FilterSideBar = () => {
 
   const handleCurrentSize = (size:string)=>{
       const newSizes = currentSizes.includes(size) ? 
-        currentSizes.filter(s => s !== size) : [...currentSizes,size];
+        currentSizes.filter(s => s !== size) : [...currentSizes,size]; 
 
-      searchParams.set("sizes",newSizes.join())
+      if(newSizes.length === 0){
+          searchParams.delete("sizes"); 
+      }else{
+        searchParams.set("sizes",newSizes.join())
+      }
+      
       searchParams.set("page","1")
       setSearchParams(searchParams);
   }
@@ -72,19 +77,19 @@ export const FilterSideBar = () => {
             <Label htmlFor="priceAny" className="text-sm cursor-pointer">Cualquier precio</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="0+" id="price1" onClick={()=> handleRangePrice("0+")}/>
+            <RadioGroupItem value="0" id="price1" onClick={()=> handleRangePrice("0")}/>
             <Label htmlFor="price1" className="text-sm cursor-pointer">$0 - $50</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="50+" id="price2" onClick={()=> handleRangePrice("50+")}/>
+            <RadioGroupItem value="50" id="price2" onClick={()=> handleRangePrice("50")}/>
             <Label htmlFor="price2" className="text-sm cursor-pointer">$50 - $100</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="100+" id="price3" onClick={()=> handleRangePrice("100+")}/>
+            <RadioGroupItem value="100" id="price3" onClick={()=> handleRangePrice("100")}/>
             <Label htmlFor="price3" className="text-sm cursor-pointer">$100 - $200</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="200+" id="price4" onClick={()=> handleRangePrice("200+")}/>
+            <RadioGroupItem value="200" id="price4" onClick={()=> handleRangePrice("200")}/>
             <Label htmlFor="price4" className="text-sm cursor-pointer">$200+</Label>
           </div>
         </RadioGroup>

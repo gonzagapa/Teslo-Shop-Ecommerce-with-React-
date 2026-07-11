@@ -9,7 +9,7 @@ import { Link, NavLink, useSearchParams } from "react-router";
 export  function CustomHeader() {
 
     const [searchParams,setSearchParams] = useSearchParams()
-    const inputSearchValue = searchParams.get("search") ?? ""
+    const inputSearchValue = searchParams.get("query") ?? ""
     const [cartCount,] = useState(3);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -20,10 +20,10 @@ export  function CustomHeader() {
       const newSearchParams = new URLSearchParams();
 
       if( typeof inputValue == "undefined" || inputValue.trim().length == 0 ) {
-        newSearchParams.delete('search')
+        newSearchParams.delete('query')
       }else{
 
-        newSearchParams.set('search',inputValue); 
+        newSearchParams.set('query',inputValue); 
       }
 
       setSearchParams(newSearchParams);
@@ -48,13 +48,13 @@ export  function CustomHeader() {
             <NavLink to="/" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
               Todos
             </NavLink>
-            <NavLink to="/gender/hombre" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
-              Hombre
+            <NavLink to="/gender/men" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
+              Hombres
             </NavLink>
-            <NavLink to="/gender/mujer" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
-              Mujer
+            <NavLink to="/gender/women" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
+              Mujeres
             </NavLink>
-            <NavLink to="/gender/ninos" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
+            <NavLink to="/gender/kid" className={({isActive})=>`text-sm font-medium transition-colors hover:text-primary ${isActive ? 'underline underline-offset-4' : ''}`}>
               Niños
             </NavLink>
           </nav>
