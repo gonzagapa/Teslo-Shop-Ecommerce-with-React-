@@ -14,7 +14,7 @@ export function HomePage() {
     <div>
      <CustomJobotrom title="Todos los productos"/>
       {isLoading ? (<p>Cargando...</p>): <ProductGrid products={data?.products ?? []}/>}
-      {isLoading ? (<p>Cargando...</p>): <CustomPagination totalPages={data?.count ?? 0}/>}
+      {isLoading ? (<p>Cargando...</p>): <CustomPagination totalPages={data?.pages ?? 0}/>}
     </div>
   )
 }

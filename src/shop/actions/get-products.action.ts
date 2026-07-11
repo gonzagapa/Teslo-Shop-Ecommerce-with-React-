@@ -1,8 +1,27 @@
 import { apiTeslo } from "@/api/api.teslo"
 import type { ProductResponse } from "@/types/products.response";
 
-export const getProductsAction = async():Promise<ProductResponse>=>{
-    const {data} = await apiTeslo.get<ProductResponse>("/products");
+interface Options {
+    limit?: string | number, 
+    offset?: string | number,
+    sizes?:string
+}
+type OptionsKey = keyof Options;  
+
+
+
+export const getProductsAction = async(option:Options):Promise<ProductResponse>=>{
+
+    const queryparams:any = {}
+
+    for(let key  in option ){
+        if(typeof option[key as OptionsKey] == "undefined") continue; 
+
+        queryparams[key] = option[key as OptionsKey] 
+    }
+    console.log(queryparams);
+
+    const {data} = await apiTeslo.get<ProductResponse>(`/products?${new URLSearchParams({...queryparams}).toString()}`);
 
     const productWithImages = data.products.map(product => ({
         ...product,
