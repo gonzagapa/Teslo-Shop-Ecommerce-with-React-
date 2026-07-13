@@ -6,11 +6,24 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router";
 
 export function LoginPage() {
+
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>)=>{
+    e.preventDefault(); 
+
+    const formData = new FormData(e.target);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    console.log({email,password});
+    
+  }
+
+
   return (
      <div className={cn("flex flex-col gap-6")}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8" onSubmit={(e)=> handleSubmit(e)}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Bienvenido</h1>
@@ -18,7 +31,7 @@ export function LoginPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@ejemplo.com" required />
+                <Input id="email" name="email" type="email" placeholder="m@ejemplo.com" required />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
@@ -27,7 +40,7 @@ export function LoginPage() {
                     Olvidaste tu contraseña?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" name="password" required />
               </div>
               <Button type="submit" className="w-full">
                 Iniciar sesión
