@@ -35,7 +35,7 @@ export const useProducts = (gender?:string) => {
 
 
     return useQuery({
-        queryKey:['products',{offset, limit, sizes, gender, price,query}],
+        queryKey:['products',{offset, limit, sizeOp, gender, price,query}],
         queryFn:()=>getProductsAction(
             {
                 limit:isNaN(+limit) ? 9: limit,

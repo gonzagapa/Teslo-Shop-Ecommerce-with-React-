@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Size } from "@/types/product.interface";
+import { memo } from "react";
 
 interface ProductCardProps {
   id: string;
@@ -11,7 +12,7 @@ interface ProductCardProps {
   size:Size[]
 }
 
-export const ProductCard = ({ name, price, image, category, size }: ProductCardProps) => {
+export const ProductCard = memo( ({ name, price, image, category, size }: ProductCardProps) => {
   return (
    <Card className="group border-0 shadow-none product-card-hover cursor-pointer pt-0">
       <CardContent className="p-0">
@@ -44,4 +45,4 @@ export const ProductCard = ({ name, price, image, category, size }: ProductCardP
       </CardContent>
     </Card>
   )
-}
+})
