@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/auth/auth.store";
 import { CustumLogo } from "@/components/custom/CustumLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,7 @@ export  function CustomHeader() {
 
     const [searchParams,setSearchParams] = useSearchParams()
     const inputSearchValue = searchParams.get("query") ?? ""
+    const {user,logout} = useAuthStore()
     const [cartCount,] = useState(3);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -83,11 +85,22 @@ export  function CustomHeader() {
             </Button>
 
             <div className="ml-5 flex gap-2">
-              <Link to={'/auth/login'} >
-                <Button>
-                  Login
+
+              {
+                !user ? 
+                (<Link to={'/auth/login'} >
+                  <Button>
+                    Login
+                  </Button>
+                </Link>) : 
+                (
+                <Button onClick={logout} variant={"outline"}>
+                  Cerrar sesión
                 </Button>
-              </Link>
+                )
+              }
+
+              
 
               <Link to={'/admin'}>
                 <Button variant='destructive'>

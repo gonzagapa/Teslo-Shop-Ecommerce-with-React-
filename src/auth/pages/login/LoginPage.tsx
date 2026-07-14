@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useAuthStore } from "@/auth/auth.store";
 
 export function LoginPage() {
 
   const [isPosting,setIsPosting] = useState(false); 
+  const {login} = useAuthStore()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>)=>{
@@ -20,15 +22,13 @@ export function LoginPage() {
     const formData = new FormData(e.target);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const isValid = await login(email,password);
 
-    try{
-      const data = await loginAction(email, password); 
-      localStorage.setItem("token", data.token)
+    if(isValid){
       navigate("/")
-      
-    }catch(error:any){
+    }else{
       toast.error("Invalid credentials")
-    }    
+    }   
     setIsPosting(false);
   }
 
