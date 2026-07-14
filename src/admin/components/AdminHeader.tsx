@@ -1,7 +1,11 @@
 import React from 'react';
 import { Search, Bell, MessageSquare, Settings } from 'lucide-react';
+import { UserIcon } from './UserIcon';
+import { useAuthStore } from '@/auth/auth.store';
 
 const AdminHeader: React.FC = () => {
+  const user = useAuthStore((state) => state.user);
+
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 h-18">
       <div className="flex items-center justify-between">
@@ -31,10 +35,10 @@ const AdminHeader: React.FC = () => {
           <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
             <Settings size={20} />
           </button>
+          {
 
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm cursor-pointer hover:shadow-lg transition-shadow">
-            JD
-          </div>
+           user && <UserIcon user={user.fullName.slice(0,2).toUpperCase()}/>
+          }
         </div>
       </div>
     </header>

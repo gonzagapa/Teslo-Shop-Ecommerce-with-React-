@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { CustumLogo } from '@/components/custom/CustumLogo';
 import { Link, useLocation } from 'react-router';
+import { useAuthStore } from '@/auth/auth.store';
+import { UserIcon } from './UserIcon';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -20,6 +22,8 @@ interface SidebarProps {
 }
 
 const AdminSidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
+
+  const user = useAuthStore((state) => state.user);
 
   const {pathname} = useLocation();
 
@@ -91,10 +95,17 @@ const AdminSidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
             <div className="w-10 h-10 linear-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
               JD
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">John Doe</p>
-              <p className="text-xs text-gray-500 truncate">john@company.com</p>
-            </div>
+            {
+              !user ? (<div className='text-left text-sm font-bold'>
+                no information is available
+              </div>) : (
+                 <div className="flex-1 min-w-0">
+                  <UserIcon user={user.fullName.slice(0,2).toUpperCase()} />
+                    <p className="text-sm font-medium text-gray-900 truncate">{user.fullName}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                </div>
+              )
+            }
           </div>
         </div>
       )}
