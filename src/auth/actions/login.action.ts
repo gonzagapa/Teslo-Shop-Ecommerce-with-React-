@@ -1,11 +1,11 @@
 import { apiTeslo } from "@/api/api.teslo"
-import type { LoginResponse } from "../types/auth.response"
+import type { AuthResponse } from "../types/auth.response"
 
 export const loginAction = async (email:string, password:string)=>{
 
     try{
 
-        const {data} = await apiTeslo.post<LoginResponse>("/auth/login",{
+        const {data} = await apiTeslo.post<AuthResponse>("/auth/login",{
             email,
             password
         }); 
