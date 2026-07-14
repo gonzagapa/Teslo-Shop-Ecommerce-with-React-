@@ -11,7 +11,7 @@ export  function CustomHeader() {
 
     const [searchParams,setSearchParams] = useSearchParams()
     const inputSearchValue = searchParams.get("query") ?? ""
-    const {user,logout} = useAuthStore()
+    const {authStatus,isAdmin,logout} = useAuthStore()
     const [cartCount,] = useState(3);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -87,7 +87,7 @@ export  function CustomHeader() {
             <div className="ml-5 flex gap-2">
 
               {
-                !user ? 
+                authStatus === "not-authenticated" ? 
                 (<Link to={'/auth/login'} >
                   <Button>
                     Login
@@ -101,12 +101,13 @@ export  function CustomHeader() {
               }
 
               
-
-              <Link to={'/admin'}>
+              {isAdmin() && ( 
+                <Link to={'/admin'}>
                 <Button variant='destructive'>
                   admin
                 </Button>
-              </Link>
+              </Link>)}
+             
             </div>
 
           </div>

@@ -7,9 +7,9 @@ import { lazy } from "react";
 import { LoginPage } from "./auth/pages/login/LoginPage";
 import RegisterPage from "./auth/pages/register/RegisterPage";
 import { DashboardPage } from "./admin/pages/dashboard/DashboardPage";
-import ProductsPage from "./shop/page/products/ProductsPage";
 import { AdminProductsPage } from "./admin/pages/products/AdminProductsPage";
 import { AdminProductPage } from "./admin/pages/product/AdminProductPage";
+import { AdminRoute, AutheticatedRoute } from "./components/routes/ProtectedRoutes";
 
 const AuthLayout = lazy(() => import('./auth/layout/AuthLayout'))
 const AdminLayout = lazy(()=> import('./admin/layout/AdminLayout'))
@@ -39,7 +39,11 @@ export const router = createBrowserRouter([
   //Auth routes
   {
     path:'/auth', 
-    Component:AuthLayout, 
+    element:(
+        <AutheticatedRoute>
+            <AuthLayout/>
+        </AutheticatedRoute>
+), 
     children:[
         {
             index:true,
@@ -59,7 +63,11 @@ export const router = createBrowserRouter([
   //Admin routes
   {
     path:'/admin',
-    Component: AdminLayout, 
+    element: (
+        <AdminRoute>
+            <AdminLayout/>
+        </AdminRoute>
+    ), 
     children:[
         {
             index:true, 
