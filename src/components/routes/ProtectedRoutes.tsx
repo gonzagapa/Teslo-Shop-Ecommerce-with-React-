@@ -2,7 +2,7 @@ import { useAuthStore } from "@/auth/auth.store";
 import type { PropsWithChildren } from "react";
 import { Navigate } from "react-router";
 
-
+//TODO: Bug when tryig to access admin route without login
 export const AdminRoute = ({children}:PropsWithChildren)=>{
     const {authStatus, isAdmin} = useAuthStore()
 
