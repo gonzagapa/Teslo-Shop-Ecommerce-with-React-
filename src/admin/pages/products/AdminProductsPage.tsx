@@ -1,11 +1,16 @@
+import { TableRowProducts } from "@/admin/components/TableRowProducts";
 import { WelcomeSection } from "@/admin/components/WelcomeSection";
 import { Button } from "@/components/ui/button";
-import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
+import { useProducts } from "@/hooks/useProducts";
 import CustomPagination from "@/shop/components/CustomPagination";
 import { PlusIcon } from "lucide-react";
 import { Link } from "react-router";
 
 export function AdminProductsPage() {
+
+  const {data,isLoading} = useProducts()
+
   return (
     <div className="p-5">
       <div className="flex items-center justify-between">
@@ -21,7 +26,6 @@ export function AdminProductsPage() {
     <Table className="bg-white border-2 border-gray-200 shadow-xs mb-10">
       <TableHeader>
         <TableRow>
-          <TableHead className="font-bold">ID</TableHead>
           <TableHead className="font-bold">Imagen</TableHead>
           <TableHead className="font-bold">Nombre</TableHead>
           <TableHead className="font-bold">Precio</TableHead>
@@ -32,26 +36,20 @@ export function AdminProductsPage() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell className="font-medium">1</TableCell>
-          <TableCell>
-            <img src="https://placehold.co/250x250" alt="producto" className="size-20 object-cover rounded-md" />
-          </TableCell>
-          <TableCell>Playera</TableCell>
-          <TableCell >$250.00</TableCell>
-          <TableCell >Categoria 1</TableCell>
-          <TableCell >100</TableCell>
-          <TableCell >X, XL, M, S</TableCell>
-          <TableCell >
-            <Link to={"/admin/products/edit"}>
-              Editar
-            </Link>
-            </TableCell>
-        </TableRow>
+       {data?.products && data.products.map((product,index)=>(
+        <TableRowProducts 
+          key={product.id} 
+          image={product.images} 
+          price={product.price}
+          name={product.title}
+          stock={product.stock}
+          gender={product.gender}
+          sizes={product.sizes}/>
+       ))}
       </TableBody>
     </Table>
 
-    <CustomPagination totalPages={10}/>
+    <CustomPagination totalPages={data?.pages ?? 0}/>
     </div>
   )
 }
