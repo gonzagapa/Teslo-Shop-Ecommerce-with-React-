@@ -9,7 +9,7 @@ import { Link } from "react-router";
 
 export function AdminProductsPage() {
 
-  const {data,isLoading} = useProducts()
+  const {data} = useProducts()
 
   return (
     <div className="p-5">
