@@ -1,7 +1,7 @@
 import { CustomJobotrom } from "@/shop/components/CustomJobotrom";
 import CustomPagination from "@/shop/components/CustomPagination";
 import { ProductGrid } from "@/shop/components/ProductGrid";
-import { useProducts } from "@/shop/hooks/useProducts";
+import { useProducts } from "@/hooks/useProducts";
 
 
 export function HomePage() {
