@@ -2,23 +2,52 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import  { Link } from "react-router"
+import  { Link, useNavigate } from "react-router"
 import { Input } from "@/components/ui/input"
+import { useAuthStore } from "@/auth/auth.store"
+import { toast } from "sonner"
+import { useState } from "react"
 
 function RegisterPage() {
+
+  const {register} = useAuthStore()
+  const [isDisabled, setIsDisabled]= useState(false)
+  const navigate = useNavigate()
+
+  const handleSubmit = async(e:React.SubmitEvent<HTMLFormElement>)=>{
+    setIsDisabled(true);
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const fullName = formData.get('fullName') as string; 
+
+      const isRegistered = await register(email,password,fullName)
+      if(isRegistered){
+        navigate('/')
+      }else{
+        toast.error('Your have an error in your inputs')
+      }
+    setIsDisabled(false);
+  }
+
   return (
    <div className={cn("flex flex-col gap-6")}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8" onSubmit={(e)=> handleSubmit(e) }>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Teslo | Shop</h1>
                 <p className="text-balance text-muted-foreground">registrate</p>
               </div>
               <div className="grid gap-2">
+                <Label htmlFor="fullName">FullName</Label>
+                <Input id="fullName" name="fullName" type="text" placeholder="Gonzalo Sanchez" required />  
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@ejemplo.com" required />
+                <Input id="email" name="email" type="email" placeholder="m@ejemplo.com" required />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
@@ -27,14 +56,14 @@ function RegisterPage() {
                     Olvidaste tu contraseña?
                   </Link>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" name="password" type="password" required />
               </div>
 
               <div className="grid gap-2">
                 <Label htmlFor="password-repeat">Repetir contraseña</Label>
-                <Input id="password-repeat" type="password" required />
+                <Input id="password-repeat" type="password" required /> {/*TODO: Valid same value as password */}
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isDisabled} >
                 Registrate
               </Button>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">

@@ -3,6 +3,7 @@ import type { User } from '@/types/user.interface'
 import { create } from 'zustand'
 import { loginAction } from './actions/login.action'
 import { checkAuthAction } from './actions/check-auth.action'
+import { registerAction } from './actions/register.action'
 
 type AuthStatus = 'authenticated' | 'checking' | 'not-authenticated'
 
@@ -16,7 +17,8 @@ interface AuthState {
   isAdmin: ()=>boolean,
 
   //Actions
-  login:(email:string, password:string)=>Promise<boolean>
+  login:(email:string, password:string)=>Promise<boolean>,
+  register:(email:string, password:string, fullName:string) => Promise<boolean>,
   logout: ()=>void,
   checkStatus:()=>Promise<boolean>
 
@@ -49,6 +51,20 @@ export const useAuthStore = create<AuthState>()((set,get) => ({
   isAdmin: ()=>{
     const roles = get().user?.roles ?? []
     return roles.includes('admin')
+  },
+
+  register:async (email:string, password:string, fullName:string)=>{
+    try{
+      const {user,token} = await registerAction({fullName:fullName,email,password});
+      set({user, token, authStatus:'authenticated'});
+      localStorage.setItem('token',token)
+      return true;
+    }catch(error){
+      set({user:null, token:null,authStatus:'not-authenticated'}); 
+      localStorage.removeItem('token')
+      return false;
+    }
+ 
   },
 
   checkStatus: async ()=>{
