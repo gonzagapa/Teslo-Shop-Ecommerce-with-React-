@@ -1,9 +1,11 @@
 import { useState } from "react"
+import { useForm } from "react-hook-form"
 import { WelcomeSection } from "@/admin/components/WelcomeSection"
 import { Button } from "@/components/ui/button"
 import  type { Product, Size } from "@/types/product.interface"
 import { X, SaveAll, Tag, Plus, Upload } from "lucide-react"
 import { Link } from "react-router"
+import { cn } from "@/lib/utils"
 
 interface Props{
     title:string,
@@ -15,9 +17,14 @@ const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 export const ProductForm = ({title,subtitle,product}:Props) => {
 
-const [dragActive, setDragActive] = useState(false);
+    
+    const {register,handleSubmit, formState:{errors}} = useForm<Product>({
+        defaultValues:product
+    });
 
-const addTag = () => {
+    const [dragActive, setDragActive] = useState(false);
+
+    const addTag = () => {
     // if (newTag.trim() && !product.tags.includes(newTag.trim())) {
     //   setProduct((prev) => ({
     //     ...prev,
@@ -25,7 +32,7 @@ const addTag = () => {
     //   }));
     //   setNewTag('');
     // }
-  };
+    };
 
   const removeTag = (tagToRemove: string) => {
     // setProduct((prev) => ({
@@ -73,9 +80,12 @@ const addTag = () => {
     console.log(files);
   };
 
+  const onSubmitForm = (productLike:Product)=>{
+    console.log({productLike});
+  }
 
   return (
-   <div className='p-3'>
+   <form onSubmit={handleSubmit(onSubmitForm)} className='p-3'>
       <div className="flex justify-between items-center">
         <WelcomeSection title={title} message={subtitle} />
         <div className="flex justify-end mb-10 gap-4">
@@ -86,7 +96,7 @@ const addTag = () => {
             </Link>
           </Button>
 
-          <Button>
+          <Button type="submit">
             <SaveAll className="w-4 h-4" />
             Guardar cambios
           </Button>
@@ -110,11 +120,17 @@ const addTag = () => {
                   </label>
                   <input
                     type="text"
+                    {...register("title",{required:true})}
                     // value={product.title}
                     // onChange={(e) => handleInputChange('title', e.target.value)}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className={cn( "w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200",{
+                        'border-red-500':errors.title
+                    })}
                     placeholder="Título del producto"
                   />
+                  {
+                    errors.title && (<p className="text-sm text-red-500">El elemento input es requerido</p>)
+                  }
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -124,13 +140,20 @@ const addTag = () => {
                     </label>
                     <input
                       type="number"
-                    //   value={product.price}
-                    //   onChange={(e) =>
-                    //     handleInputChange('price', parseFloat(e.target.value))
-                    //   }
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      {...register("price",{
+                        required:true,
+                        min:1
+                      })}
+                      className={cn( "w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200",{
+                        'border-red-500':errors.price
+                    })}
                       placeholder="Precio del producto"
                     />
+                    {
+                    errors.price && (
+                    <p className="text-sm text-red-500">{errors.price.message}</p>
+                    )
+                  }
                   </div>
 
                   <div>
@@ -139,13 +162,18 @@ const addTag = () => {
                     </label>
                     <input
                       type="number"
-                    //   value={product.stock}
-                    //   onChange={(e) =>
-                    //     handleInputChange('stock', parseInt(e.target.value))
-                    //   }
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      {...register("stock",{
+                        required:true,
+                      })}
+                   
+                      className={cn( "w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200",{
+                        'border-red-500':errors.stock
+                    })}
                       placeholder="Stock del producto"
                     />
+                   {
+                    errors.stock && (<p className="text-sm text-red-500">El elemento input es requerido</p>)
+                   }
                   </div>
                 </div>
 
@@ -155,11 +183,23 @@ const addTag = () => {
                   </label>
                   <input
                     type="text"
-                    // value={product.slug}
-                    // onChange={(e) => handleInputChange('slug', e.target.value)}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    {...register("slug",{
+                        required:true,
+                        validate: (value)=> !/\s/.test(value)
+                    })}
+                    
+                    className={cn( "w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200",{
+                        'border-red-500':errors.slug
+                    })}
                     placeholder="Slug del producto"
                   />
+                  {
+                    errors.slug && (
+                        <p className="text-sm text-red-500">
+                            {errors.slug.message}
+                        </p>
+                    )
+                  }
                 </div>
 
                 <div>
@@ -167,10 +207,7 @@ const addTag = () => {
                     Género del producto
                   </label>
                   <select
-                    // value={product.gender}
-                    // onChange={(e) =>
-                    //   handleInputChange('gender', e.target.value)
-                    // }
+                  {...register("gender")}
                     className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   >
                     <option value="men">Hombre</option>
@@ -185,14 +222,18 @@ const addTag = () => {
                     Descripción del producto
                   </label>
                   <textarea
-                    // value={product.description}
-                    // onChange={(e) =>
-                    //   handleInputChange('description', e.target.value)
-                    // }
+                  {...register("description",{
+                    required:true
+                  })}
                     rows={5}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                    className={cn( "w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200",{
+                        'border-red-500':errors.description
+                    })}
                     placeholder="Descripción del producto"
                   />
+                  {
+                    errors.description && (<p className="text-sm text-red-500">Este campo es requerido</p>)
+                  }
                 </div>
               </div>
             </div>
@@ -414,6 +455,6 @@ const addTag = () => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   )
 }

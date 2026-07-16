@@ -25,8 +25,6 @@ export const AdminProductPage = () => {
     return (<Navigate to={'/admin/products'}/>)
   }
 
-  console.log({product,isLoading});
-
   return <ProductForm product={product} title={title} subtitle={subtitle}/>
   
 };
