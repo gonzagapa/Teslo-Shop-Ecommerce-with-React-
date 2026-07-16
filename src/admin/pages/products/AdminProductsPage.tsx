@@ -38,6 +38,7 @@ export function AdminProductsPage() {
       <TableBody>
        {data?.products && data.products.map((product,index)=>(
         <TableRowProducts 
+          id={product.id}
           key={product.id} 
           image={product.images} 
           price={product.price}

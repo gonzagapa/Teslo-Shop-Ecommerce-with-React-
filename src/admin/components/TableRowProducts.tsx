@@ -2,6 +2,7 @@ import { TableCell, TableRow } from "@/components/ui/table"
 import { Link } from "react-router"
 
 interface Props{
+    id:string,
     name:string, 
     price:number,
     gender:string, 
@@ -10,7 +11,7 @@ interface Props{
     image: string[]
 }
 
-export const TableRowProducts = ({name,price,gender,stock,sizes, image}:Props) => {
+export const TableRowProducts = ({id,name,price,gender,stock,sizes, image}:Props) => {
   return (
      <TableRow>
           <TableCell>
@@ -22,7 +23,7 @@ export const TableRowProducts = ({name,price,gender,stock,sizes, image}:Props) =
           <TableCell >{stock}</TableCell>
           <TableCell >{sizes.join(',')}</TableCell>
           <TableCell >
-            <Link to={"/admin/products/edit"}>
+            <Link to={`/admin/products/${id}`}>
               Editar
             </Link>
             </TableCell>
