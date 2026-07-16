@@ -15,6 +15,7 @@ const AdminHeader: React.FC = () => {
     
     if(e.key !== "Enter" || (typeof inputValue == 'undefined' || inputValue.trim().length < 3)) {
       searchParams.delete("query")
+      setSearchParams(searchParams)
     }else{
       const queryParams = new URLSearchParams({"query":inputValue})
       setSearchParams(queryParams);

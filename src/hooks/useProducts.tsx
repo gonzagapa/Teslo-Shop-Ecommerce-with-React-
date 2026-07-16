@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router"
 
 
 export const useProducts = (gender?:string) => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     const limit = searchParams.get("limit") ?? 9 ; 
     const page = searchParams.get("page") ?? 1;
