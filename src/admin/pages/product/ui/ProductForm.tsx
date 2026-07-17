@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { WelcomeSection } from "@/admin/components/WelcomeSection"
 import { Button } from "@/components/ui/button"
@@ -18,43 +18,42 @@ const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 export const ProductForm = ({title,subtitle,product}:Props) => {
 
     
-    const {register,handleSubmit, formState:{errors}} = useForm<Product>({
+    const {register,handleSubmit, formState:{errors},getValues, setValue, watch} = useForm<Product>({
         defaultValues:product
     });
 
     const [dragActive, setDragActive] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const sizesProduct = watch("sizes");
+    const tagsProduct = watch("tags")
+    const stockProduct = watch("stock");
 
     const addTag = () => {
-    // if (newTag.trim() && !product.tags.includes(newTag.trim())) {
-    //   setProduct((prev) => ({
-    //     ...prev,
-    //     tags: [...prev.tags, newTag.trim()],
-    //   }));
-    //   setNewTag('');
-    // }
+        const inputValue = inputRef.current?.value;
+        if(!inputValue) return; 
+
+        const tagSet = new Set(getValues("tags"));
+        tagSet.add(inputValue);
+
+        
+        setValue("tags", Array.from(tagSet));
     };
 
   const removeTag = (tagToRemove: string) => {
-    // setProduct((prev) => ({
-    //   ...prev,
-    //   tags: prev.tags.filter((tag) => tag !== tagToRemove),
-    // }));
+    const filteredTag = tagsProduct.filter((tag) => tag !== tagToRemove); 
+
+    setValue("tags",filteredTag);
   };
 
-  const addSize = (size: string) => {
-    // if (!product.sizes.includes(size)) {
-    //   setProduct((prev) => ({
-    //     ...prev,
-    //     sizes: [...prev.sizes, size],
-    //   }));
-    // }
+  const addSize = (size: Size) => {
+    const productSizes = new Set([...getValues("sizes"),size]);
+    setValue("sizes",Array.from(productSizes))
   };
 
   const removeSize = (sizeToRemove: string) => {
-    // setProduct((prev) => ({
-    //   ...prev,
-    //   sizes: prev.sizes.filter((size) => size !== sizeToRemove),
-    // }));
+    const filterSize = getValues("sizes").filter(size => sizeToRemove !== size);
+    setValue("sizes",filterSize);
   }; 
 
   const handleDrag = (e: React.DragEvent) => {
@@ -246,15 +245,18 @@ export const ProductForm = ({title,subtitle,product}:Props) => {
 
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((size) => (
+                  {availableSizes.map((size) => (
                     <span
                       key={size}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200"
+                      className={cn("inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200",{
+                        'hidden': !sizesProduct.includes(size)
+                      })}
                     >
                       {size}
                       <button
+                        type="button"
                         onClick={() => removeSize(size)}
-                        className="ml-2 text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                        className={cn(`ml-2 text-blue-600 hover:text-blue-800 transition-colors duration-200`)}
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -268,14 +270,17 @@ export const ProductForm = ({title,subtitle,product}:Props) => {
                   </span>
                   {availableSizes.map((size) => (
                     <button
+                      type="button"
                       key={size}
                       onClick={() => addSize(size)}
-                      disabled={product.sizes.includes(size)}
-                      className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
-                        product.sizes.includes(size)
+                      disabled={sizesProduct.includes(size)}
+                      className={cn(`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
+                        sizesProduct.includes(size)
                           ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                           : 'bg-slate-200 text-slate-700 hover:bg-slate-300 cursor-pointer'
-                      }`}
+                      }`,{
+                        'hidden': sizesProduct.includes(size)
+                      })}
                     >
                       {size}
                     </button>
@@ -292,7 +297,7 @@ export const ProductForm = ({title,subtitle,product}:Props) => {
 
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
-                  {product.tags.map((tag) => (
+                  {tagsProduct.map((tag) => (
                     <span
                       key={tag}
                       className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200"
@@ -300,6 +305,7 @@ export const ProductForm = ({title,subtitle,product}:Props) => {
                       <Tag className="h-3 w-3 mr-1" />
                       {tag}
                       <button
+                        type="button"
                         onClick={() => removeTag(tag)}
                         className="ml-2 text-green-600 hover:text-green-800 transition-colors duration-200"
                       >
@@ -312,9 +318,14 @@ export const ProductForm = ({title,subtitle,product}:Props) => {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    // value={newTag}
-                    // onChange={(e) => setNewTag(e.target.value)}
-                    // onKeyDown={(e) => e.key === 'Enter' && addTag()}
+                    ref={inputRef}
+                    onKeyDown={(e)=>{
+                        if(e.key == "Enter" || e.key == "," || e.key == " "){
+                          e.preventDefault()
+                          addTag()
+                          inputRef.current!.value = "";
+                        }
+                    }}  
                     placeholder="Añadir nueva etiqueta..."
                     className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   />
@@ -418,16 +429,16 @@ export const ProductForm = ({title,subtitle,product}:Props) => {
                   </span>
                   <span
                     className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      product.stock > 5
+                      stockProduct > 5
                         ? 'bg-green-100 text-green-800'
                         : product.stock > 0
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-red-100 text-red-800'
                     }`}
                   >
-                    {product.stock > 5
+                    {stockProduct > 5
                       ? 'En stock'
-                      : product.stock > 0
+                      : stockProduct > 0
                       ? 'Bajo stock'
                       : 'Sin stock'}
                   </span>
@@ -447,7 +458,7 @@ export const ProductForm = ({title,subtitle,product}:Props) => {
                     Tallas disponibles
                   </span>
                   <span className="text-sm text-slate-600">
-                    {product.sizes.length} tallas
+                    {sizesProduct.length} tallas
                   </span>
                 </div>
               </div>
