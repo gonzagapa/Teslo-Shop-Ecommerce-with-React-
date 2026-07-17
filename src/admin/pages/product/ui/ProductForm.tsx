@@ -10,12 +10,14 @@ import { cn } from "@/lib/utils"
 interface Props{
     title:string,
     subtitle:string, 
-    product:Product
+    product:Product, 
+
+    onSubmitForm: (productLike:Partial<Product>)=> Promise<void>
 }
 
 const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL']; 
 
-export const ProductForm = ({title,subtitle,product}:Props) => {
+export const ProductForm = ({title,subtitle,product, onSubmitForm}:Props) => {
 
     
     const {register,handleSubmit, formState:{errors},getValues, setValue, watch} = useForm<Product>({
@@ -78,10 +80,6 @@ export const ProductForm = ({title,subtitle,product}:Props) => {
     const files = e.target.files;
     console.log(files);
   };
-
-  const onSubmitForm = (productLike:Product)=>{
-    console.log({productLike});
-  }
 
   return (
    <form onSubmit={handleSubmit(onSubmitForm)} className='p-3'>

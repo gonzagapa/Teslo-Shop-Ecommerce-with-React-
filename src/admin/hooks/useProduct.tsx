@@ -1,4 +1,5 @@
 import { getProductById } from "@/actions/get-product-by-id.action"
+import type { Product } from "@/types/product.interface"
 import { useQuery } from "@tanstack/react-query"
 
 export const useProduct = (id:string) => {
@@ -9,8 +10,14 @@ export const useProduct = (id:string) => {
         staleTime: 1000 * 60,
         retry:false
     })
+
+    const handleProductSubmit = async(productLike:Partial<Product>)=>{
+        console.log({productLike});
+        
+    }
   
     return {
-        ...query
+        ...query,
+        handleProductSubmit
   }
 }
