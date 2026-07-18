@@ -11,7 +11,7 @@ export const createUpdateProductAction = async (productLike:Partial<Product>): P
     rest.price = Number(rest.price ?? 0); 
 
     const {data} = await apiTeslo<Product>({
-        url: isCreating ? '/products' : `/products${id}`,
+        url: isCreating ? '/products' : `/products/${id}`,
         method: isCreating ? 'POST' : 'PATCH',
         data:rest
     })

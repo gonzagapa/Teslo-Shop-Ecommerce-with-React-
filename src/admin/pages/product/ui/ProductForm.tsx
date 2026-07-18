@@ -10,14 +10,16 @@ import { cn } from "@/lib/utils"
 interface Props{
     title:string,
     subtitle:string, 
-    product:Product, 
+    product:Product,
+    
+    isSubmittedPending: boolean,
 
     onSubmitForm: (productLike:Partial<Product>)=> Promise<void>
 }
 
 const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL']; 
 
-export const ProductForm = ({title,subtitle,product, onSubmitForm}:Props) => {
+export const ProductForm = ({title,subtitle,product, isSubmittedPending, onSubmitForm}:Props) => {
 
     
     const {register,handleSubmit, formState:{errors},getValues, setValue, watch} = useForm<Product>({
@@ -86,14 +88,15 @@ export const ProductForm = ({title,subtitle,product, onSubmitForm}:Props) => {
       <div className="flex justify-between items-center">
         <WelcomeSection title={title} message={subtitle} />
         <div className="flex justify-end mb-10 gap-4">
-          <Button variant="outline">
+          <Button variant="outline" type="button">
             <Link to="/admin/products" className="flex items-center gap-2">
               <X className="w-4 h-4" />
+
               Cancelar
             </Link>
           </Button>
 
-          <Button type="submit">
+          <Button type="submit" disabled={isSubmittedPending}>
             <SaveAll className="w-4 h-4" />
             Guardar cambios
           </Button>

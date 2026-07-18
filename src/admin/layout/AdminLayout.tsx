@@ -2,6 +2,7 @@ import { useState } from "react";
 import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
 import { Outlet } from "react-router";
+import { Toaster } from "sonner";
 
 export default function AdminLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -17,6 +18,7 @@ export default function AdminLayout() {
         <AdminHeader />
         
         <Outlet/>
+        <Toaster />
       </div>
     </div>
   )
